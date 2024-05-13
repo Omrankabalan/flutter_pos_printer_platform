@@ -304,7 +304,7 @@ class FlutterPosPrinterPlatformPlugin : FlutterPlugin, MethodCallHandler, Plugin
 
     private fun verifyIsBluetoothIsOn(): Boolean {
         if (checkPermissions()) {
-            if (!bluetoothService.mBluetoothAdapter.isEnabled) {
+            if (bluetoothService != null && !bluetoothService.mBluetoothAdapter.isEnabled) {
                 if (requestPermissionBT) return false
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 currentActivity?.let { startActivityForResult(it, enableBtIntent, PERMISSION_ENABLE_BLUETOOTH, null) }
@@ -408,7 +408,8 @@ class FlutterPosPrinterPlatformPlugin : FlutterPlugin, MethodCallHandler, Plugin
 
     override fun onDetachedFromActivityForConfigChanges() {
         currentActivity = null
-        bluetoothService.setActivity(null)
+        if (bluetoothService != null)
+            bluetoothService.setActivity(null)
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -420,7 +421,8 @@ class FlutterPosPrinterPlatformPlugin : FlutterPlugin, MethodCallHandler, Plugin
 
     override fun onDetachedFromActivity() {
         currentActivity = null
-        bluetoothService.setActivity(null)
+        if (bluetoothService != null)
+            bluetoothService.setActivity(null)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
